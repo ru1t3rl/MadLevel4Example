@@ -74,8 +74,9 @@ class RemindersFragment : Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                reminders.removeAt(position)
-                reminderAdapter.notifyDataSetChanged()
+
+                reminderRepository.deleteReminder(reminders[position])
+                getRemindersFromDatabase()
             }
         }
         return ItemTouchHelper(callback)
