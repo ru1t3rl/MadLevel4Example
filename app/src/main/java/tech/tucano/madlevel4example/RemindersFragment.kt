@@ -18,8 +18,11 @@ import tech.tucano.madlevel4example.databinding.FragmentRemindersBinding
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 class RemindersFragment : Fragment() {
+    private lateinit var reminderRepository: ReminderRepository
+
     private val reminders = arrayListOf<Reminder>()
     private val reminderAdapter = ReminderAdapter(reminders)
+
     private lateinit var binding: FragmentRemindersBinding
 
     override fun onCreateView(
@@ -34,6 +37,9 @@ class RemindersFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         observeAddReminderResult()
         initViews()
+
+        reminderRepository = ReminderRepository(requireContext())
+        getRemindersFromDatabase()
     }
 
     private fun initViews(){
@@ -73,5 +79,12 @@ class RemindersFragment : Fragment() {
             }
         }
         return ItemTouchHelper(callback)
+    }
+
+    private fun getRemindersFromDatabase(){
+        val reminders = reminderRepository.getAllReminders()
+        this.reminders.clear()
+        this.reminders.addAll(reminders)
+        reminderAdapter.notifyDataSetChanged()
     }
 }
